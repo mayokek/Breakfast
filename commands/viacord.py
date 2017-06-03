@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext import commands
 from collections import namedtuple
@@ -54,25 +55,9 @@ class ViaCord:
         self.open_calls[author] = viacord
         await self.bot.say("A ViaCord connection has been opened!\nEverything you say"
                            " will relayed to the channel.\n"
-                           "Reponses will be relayed here.\nType:"
+                           "Reponses will be relayed here.\nType"
                            " `viacord exit` to quit.")
-        msg = ""
-        while msg == "" or msg is not None:
-            msg = await self.bot.wait_for_message(author=author,
-                                                  channel=chann)
-            if msg is not None and msg.content.lower() != "viacord exit":
-                try:
-                    await self.bot.send_message(channel, "{}: {}".format(msg.author.name, msg.content))
-                except:
-                    await self.bot.say("Sorry, I couldn't send your message")
-            else:
-                if self.open_calls[author] != author:
-                    await self.bot.say("Only the author who started this call can end it!")
-                    break
-                await self.bot.send_message(channel, "The ViaCord connection has been terminated on another end!")
-                del self.open_calls[author]
-                await self.bot.say("The ViaCord connection has been terminated!")
-                break
+        await self.bot.send_message(channel, "The ViaCord has been opened from {} by {}".format(ctx.message.server.name, author.name))
             
 
     async def on_message(self, message):
@@ -83,6 +68,18 @@ class ViaCord:
                 msg = "{}: {}".format(message.author.name, message.content)
                 msg = escape(msg, mass_mentions=True)
                 await self.bot.send_message(v.source, msg)
+            if v.source == message.channel:
+                if message.content.lower() == "viacord exit":
+                    await self.bot.send_message(v.destination, "The ViaCord connection has been terminated on another end!")
+                    await self.bot.send_message(v.source, "The ViaCord connection has been terminated!")
+                    await asyncio.sleep(2)
+                    del self.open_calls[k]
+                    return
+                if "b$" in message.content:
+                    return
+                msg = "{}: {}".format(message.author.name, message.content)
+                msg = escape(msg, mass_mentions=True)
+                await self.bot.send_message(v.destination, msg)
 
 def setup(bot):
     bot.add_cog(ViaCord(bot))
