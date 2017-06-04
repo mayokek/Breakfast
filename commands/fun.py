@@ -4,6 +4,7 @@ import os
 import discord
 
 from discord.ext import commands
+from util import checks
 
 class Fun():
     def __init__(self, bot):
@@ -21,6 +22,7 @@ class Fun():
             await self.bot.say("I rate {} a {}/10".format(user.name, random.randint(0, 10)))
 
     @commands.command(pass_context=True, no_pm=True)
+    @checks.is_bot_commander()
     async def poll(self, ctx, *text):
         """Starts/Stops a poll"""
         message = ctx.message

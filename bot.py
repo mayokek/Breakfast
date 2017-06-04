@@ -27,10 +27,6 @@ logger = logging(bot)
 
 extensions = ["commands.fun", "commands.moderation", "commands.configuration", "commands.information", "commands.viacord"]
 
-change_log = [
-	"Language changed from C# to Python"
-]
-
 xl = "```xl\n{}\n```"
 
 async def _restart_bot():
@@ -58,8 +54,15 @@ async def on_ready():
 async def on_command_error(error, ctx):
         if isinstance(error, commands.CommandNotFound):
                 return
-        if isinstance(error, commands.DisabledCommand):
-                await bot.send_message(ctx.message.channel, "This command has been disabled")
+
+        if isinstance(error, checks.owner_only):
+                await bot.send_message(ctx.message.channel, ":no_entry: This command can only be ran by the bot owner")
+                return
+        if isinstance(error, checks.not_server_owner):
+                await bot.send_message(ctx.message.channel, ":no_entry: This command can only be ran by the server owner (`{}`)".format(ctx.message.server.owner))
+                return
+        if isinstance(error, checks.not_bot_commander):
+                await bot.send_message(ctx.message.channel, ":no_entry: You must have the `Breakfast Eater` role in order to use this command!")
                 return
 
         if ctx.message.channel.is_private:

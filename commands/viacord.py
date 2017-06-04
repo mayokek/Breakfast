@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from collections import namedtuple
 from util.chat_formatting import escape, pagify
+from util import checks
 
 OpenCall = namedtuple("ViaCord", ["source", "destination"])
 
@@ -14,6 +15,7 @@ class ViaCord:
         self.open_calls = {}
 
     @commands.command(pass_context=True)
+    @checks.is_bot_commander()
     async def viacord(self, ctx, channel):
         """Makes you able to communicate with other servers/channels"""
         author = ctx.message.author
