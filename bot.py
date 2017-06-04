@@ -24,6 +24,7 @@ config = Config()
 bot = commands.Bot(command_prefix=config.command_prefix, description="A multi-purpose bot", pm_help=False)
 i = datetime.now()
 logger = logging(bot)
+lock_status = False
 
 extensions = ["commands.fun", "commands.moderation", "commands.configuration", "commands.information", "commands.viacord"]
 
@@ -35,6 +36,10 @@ async def _restart_bot():
 	
 async def _shutdown_bot():
 	await bot.logout()
+
+async def set_default_status():
+        game = discord.Game(name="eating Breakfast", url="http://twitch.tv/FUNDRAGON123", type=1)
+        await bot.change_presence(status=discord.Status.online, game=game)
 	
 @bot.event
 async def on_resumed():
@@ -44,6 +49,7 @@ async def on_resumed():
 async def on_ready():
 	print("Bot connected!\n")
 	print("Logged in as:\n{}/{}#{}\n".format(bot.user.id, bot.user.name, bot.user.discriminator))
+	await set_default_status()
 	for extension in extensions:
 		try:
 			bot.load_extension(extension)
@@ -138,17 +144,16 @@ async def terminal(ctx, *, command:str):
         except:
                 await bot.say("Error, couldn't send command")
 
-"""lock_status = False
-
 @bot.command(pass_context=True)
 @checks.is_owner()
 async def lockstatus(ctx):
+        global lock_status
         if lock_status is True:
                 lock_status = False
                 await bot.say("Successfully changed the lock status to `false`")
         else:
                 lock_status = True
-                await bot.say("Successfully changed the lock status to `true`")"""
+                await bot.say("Successfully changed the lock status to `true`")
 
 @bot.command(pass_context=True)
 @checks.is_owner()
@@ -163,10 +168,9 @@ async def status(ctx, status=None, *, game=None):
                 "dnd": discord.Status.dnd,
                 "invis": discord.Status.invisible
                 }
-
-        """if lock_status is True and ctx.message.author.id is not config.owner_id:
-                await bot.say("You may not edit the bot's status")
-                return"""
+        if lock_status is True and ctx.message.author.id is not config.owner_id:
+                await bot.say(":lock: The status is current locked!")
+                return
 
         current_game = ctx.message.server.me.game if ctx.message.server is not None else None
         
