@@ -2,6 +2,7 @@ import discord
 
 from discord.ext import commands
 from util.config import Config
+from util.mysql import *
 config = Config()
 
 class owner_only(commands.CommandError):
@@ -11,6 +12,9 @@ class not_server_owner(commands.CommandError):
     pass
 
 class not_bot_commander(commands.CommandError):
+    pass
+
+class not_mod(commands.CommandError):
     pass
 
 def is_owner():
@@ -36,4 +40,14 @@ def is_bot_commander():
             return True
         else:
             raise not_bot_commander
+    return commands.check(predicate)
+
+def is_mod():
+    def predicate(ctx):
+        name = read_data_entry(ctx.message.server.id, "mod-role")
+        role = discord.utils.get(ctx.message.author.roles, name=name)
+        if role:
+            return True
+        else:
+            raise not_mod
     return commands.check(predicate)

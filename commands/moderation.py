@@ -5,6 +5,7 @@ from discord.ext import commands
 from util.mysql import *
 from util.logging import logging
 from util.embed import *
+from util import checks
 
 class Moderation():
     def __init__(self, bot):
@@ -12,13 +13,9 @@ class Moderation():
         self.logger = logging(bot)
 
     @commands.command(pass_context=True)
+    @checks.is_mod()
     async def kick(self, ctx, user:discord.Member, *, reason:str=None):
         """Kick a user from the server"""
-        mod_role = read_data_entry(ctx.message.server.id, "mod-role")
-        mod = discord.utils.get(ctx.message.author.roles, name=mod_role)
-        if not mod:
-            await self.bot.say("You must have the `{}` role required to execute this command".format(mod_role))
-            return
         if reason is None:
             reason = "Reason is empty"
         try:
@@ -36,13 +33,9 @@ class Moderation():
         await self.bot.say("Successfully kicked `{}`".format(user))
 
     @commands.command(pass_context=True)
+    @checks.is_mod()
     async def ban(self, ctx, user:discord.Member, *, reason:str=None):
         """Ban a user from the server"""
-        mod_role = read_data_entry(ctx.message.server.id, "mod-role")
-        mod = discord.utils.get(ctx.message.author.roles, name=mod_role)
-        if not mod:
-            await self.bot.say("You must have the `{}` role required to execute this command".format(mod_role))
-            return
         if reason is None:
             reason = "Reason is empty"
         try:
@@ -60,13 +53,9 @@ class Moderation():
         await self.bot.say("Successfully banned `{}`".format(user))
 
     @commands.command(pass_context=True)
+    @checks.is_mod()
     async def prune(self, ctx, amount:int):
         """Prunes the specified amount of messages"""
-        mod_role = read_data_entry(ctx.message.server.id, "mod-role")
-        mod = discord.utils.get(ctx.message.author.roles, name=mod_role)
-        if not mod:
-            await self.bot.say("You must have the `{}` role required to execute this command".format(mod_role))
-            return
         try:
             await self.bot.delete_message(ctx.message)
         except discord.errors.Forbidden:

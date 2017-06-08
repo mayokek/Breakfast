@@ -9,7 +9,7 @@ class Configuration():
 
     @commands.command(pass_context=True)
     @checks.is_server_owner()
-    async def config(self, ctx, type:str, *, value:str):
+    async def editconfig(self, ctx, type:str, *, value:str):
         """Modifies the server's local config"""
         await self.bot.send_typing(ctx.message.channel)
         if type == "mod-role" or type == "mute-role" or type == "auto-role" or type == "join-leave-channel":
