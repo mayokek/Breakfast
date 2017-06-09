@@ -24,7 +24,7 @@ Owner(Self-Explanatory)
  Breakfast provides a great many of commands from System, Fun, Moderation and Configuration. All commands marked with ! are bot commander only ^ are moderators only and all commands marked with * are owner only.
  
 ### System
-(No one but H3X can use these)
+@mayokek only stuff
 notifydev - After using this command and giving an argument including your message it will send a message to H3X(Owner).
 
 *restart -Restarts the bot
