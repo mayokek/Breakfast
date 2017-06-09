@@ -9,6 +9,16 @@ An amazing discord bot written in python!
 
 https://discord.gg/NYFKxAE
 
+## Ranks
+
+List of bot related roles:
+
+Breakfast-Eater(Trusted)
+Contributor(Accepted pull request or issue)
+Moderator(Has moderator commands)
+Owner(Self-Explanatory)
+
+
 ## Commands
 
  Breakfast provides a great many of commands from System, Fun, Moderation and Configuration. All commands marked with ! are bot commander only ^ are moderators only and all commands marked with * are owner only.
