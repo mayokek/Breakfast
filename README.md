@@ -63,7 +63,7 @@ vote - Votes for an option in a poll Args: Option1,2 or 3
 
 ### Configuration
 
-*config - Sets the config 
+*editconfig - Sets the config 
 
 showconfig - Shows current database profile
 
